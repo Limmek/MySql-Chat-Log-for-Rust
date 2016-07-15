@@ -32,7 +32,7 @@ After Drop Table plugin must be reloaded for a new table to be created!
 
 
 ##Web Template.
-![IMAGE ALT TEXT HERE](http://img.limmek.se/1468613497.jpg)
+![IMAGE ALT TEXT HERE](https://raw.githubusercontent.com/Limmek/MySql-Chat-Log-for-Rust/master/template_image.jpg)
 
 Live demo (http://rust.swedon.nu/chat)
 
