@@ -8,13 +8,13 @@ Database is created on connection if not exist.
 
 ###How to use and install the plugin:
 ------
-1. Insert MCLog.cs inside plugin folder.
+1. Download and move MCLog.cs inside plugin folder.
 2. Edit MCLog.json in config folder.
 3. Reload plugin so MySql connection opened.
 
 ###How to use and install the web template:
 ------
-1. Go to (https://github.com/Limmek/MySql-Chat-Log-for-Rust) and download the latest source.
+1. Download the latest web source.
 2. Open up your web folder and move the files.
 3. Edit the config.php.
 
