@@ -1,0 +1,97 @@
+﻿body {
+    background-color: #f3f3f3 !important;
+    font-family:consolas !important;
+
+}
+
+footer {
+    color: #777;
+    padding: 0px !important;
+    margin: 0px !important;
+    margin-top: 20px !important;
+}
+
+footer a, a:hover {
+    color: #777;
+    text-decoration: none !important;
+}
+
+.chat {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body {
+    margin-right: 60px;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon {
+    margin-right: 5px;
+}
+
+.panel-body {
+    overflow-y: auto;
+    height: 580px;
+}
+
+.panel-footer {
+    background-color: #d9edf7 !important;
+    padding: 3px !important;
+}
+
+.panel-heading {
+    font-size: 1.2em !important;
+    font-style: bold !important;
+}
+
+.pagination-sm {
+    margin: 0px !important;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align:center !important;
+}
+.col-centered {
+    display:inline-block !important;
+    float:none !important;
+    margin: 0 auto !important;
+    /* reset the text-align */
+    text-align:left !important;
+    /* inline-block space fix */
+    margin-right:-4px !important;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
