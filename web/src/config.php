@@ -6,7 +6,7 @@
 	$username 	= 'username' ;
 	$password 	= 'password' ;
 	$db 		= 'example' ;
-	$limit		= 20 ;
+	$limit		= 100 ;
 
 	$display_error = false ;
 
