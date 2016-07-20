@@ -106,7 +106,7 @@ namespace Oxide.Plugins
             BasePlayer player = (BasePlayer)arg.connection.player;
             string message = arg.GetString(0);
             MySqlConnect();
-            if (hasPermission(player, "mod"))
+            if (player.IsAdmin())
             {
                 var sql = Core.Database.Sql.Builder.Append(@InsertData, player.userID, EncodeNonAsciiCharacters(player.displayName), message, 1, getDateTime(), player.net.connection.ipaddress);
                 _mySql.Insert(sql, _mySqlConnection);
