@@ -1,9 +1,8 @@
-// Reference: Oxide.Ext.MySql
-
 using System;
 using System.Text;
 using System.Collections.Generic;
 using Oxide.Core;
+using Oxide.Ext.MySql;
 
 namespace Oxide.Plugins
 {
