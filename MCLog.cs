@@ -2,22 +2,27 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using Oxide.Core;
-using Oxide.Ext.MySql;
+using Oxide.Core.Database;
+using Oxide.Core.MySql;
 
 namespace Oxide.Plugins
 {
-    [Info("MCLog", "Limmek", "1.0.0")]
+    [Info("MCLog", "Limmek", "1.1.1"/*, ResourceId = 123*/)]
     [Description("MySql Chat Log")]
     internal class MCLog : RustPlugin
     {
-        private readonly Ext.MySql.Libraries.MySql _mySql = Interface.GetMod().GetLibrary<Ext.MySql.Libraries.MySql>();
-        private const string EmptyTable = "TRUNCATE mclog";
-        private const string DropTable = "DROP TABLE mclog";         
-        private const string InsertData = "INSERT INTO mclog (`steam_id`, `player_name`, `chat_msg`, `is_admin`, `time`, `player_ip`) VALUES (@0, @1, @2, @3, @4, @5);";
+        readonly Core.MySql.Libraries.MySql _mySql = new Core.MySql.Libraries.MySql();
+        private Connection _mySqlConnection = null;
+        //private readonly Ext.MySql.Libraries.MySql _mySql = Interface.GetMod().GetLibrary<Ext.MySql.Libraries.MySql>();     
         private const string CreateTable = "CREATE TABLE IF NOT EXISTS mclog (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, time TIMESTAMP NULL DEFAULT NULL, steam_id BIGINT(255), player_name VARCHAR(255), chat_msg TEXT DEFAULT NULL, is_admin INT(2) default '0', player_ip VARCHAR(255));";
-        private Core.Database.Connection _mySqlConnection = null;
         private Dictionary<string, object> dbConnect = null;
         protected override void LoadDefaultConfig() { }
+        
+        // Execute query
+        public void executeQuery(string query, params object[] data) {
+            var sql = Sql.Builder.Append(query, data);
+            _mySql.Insert(sql, _mySqlConnection);
+        }
 
         static string EncodeNonAsciiCharacters(string value)
         {
@@ -66,16 +71,15 @@ namespace Oxide.Plugins
 
         private void MySQLCreateTableOnConnect()
         {
-            try { 
+            try 
+            { 
                 MySqlConnect();
                 var sql = Core.Database.Sql.Builder.Append(@CreateTable);
                 _mySql.Insert(sql, _mySqlConnection);
             }
             catch (Exception ex)
             {   
-
-                return;
-
+                Puts(ex.Message);
             }   
         }
 
@@ -85,7 +89,7 @@ namespace Oxide.Plugins
                 {"Database", "db"},
                 {"Port", 3306 },
                 {"Host", "127.0.0.1"}, 
-                {"Username", "user"},
+                {"Username", "username"},
                 {"Password", "password"},
             });
             SaveConfig();
@@ -94,49 +98,45 @@ namespace Oxide.Plugins
 
         void Unloaded()
         {
-            timer.Once(5, () =>
-            {
-                _mySql.CloseDb(_mySqlConnection);
-                _mySqlConnection = null;
-            });
+
+            _mySql.CloseDb(_mySqlConnection);
+            _mySqlConnection = null;
+
         }
 
-        void OnPlayerChat(ConsoleSystem.Arg arg) 
-        {   
-            BasePlayer player = (BasePlayer)arg.connection.player;
-            string message = arg.GetString(0);
-            MySqlConnect();
-            if (player.IsAdmin())
-            {
-                var sql = Core.Database.Sql.Builder.Append(@InsertData, player.userID, EncodeNonAsciiCharacters(player.displayName), message, 1, getDateTime(), player.net.connection.ipaddress);
-                _mySql.Insert(sql, _mySqlConnection);
-            }else 
-            {
-                var sql = Core.Database.Sql.Builder.Append(@InsertData, player.userID, EncodeNonAsciiCharacters(player.displayName), message, 0, getDateTime(), player.net.connection.ipaddress);
-                _mySql.Insert(sql, _mySqlConnection);
-            }  
+        // Log Chat messages
+        void OnPlayerChat(ConsoleSystem.Arg arg)  {   
+                BasePlayer player = (BasePlayer)arg.Connection.player;
+                var pname = EncodeNonAsciiCharacters(player.displayName);
+                var pid = player.userID.ToString();
+                var pip = player.net.connection.ipaddress;
+                string message = arg.GetString(0);
+                if (player.IsAdmin) {
+                    // Admin
+                    //PrintWarning(pid+" "+pname+" "+pip+" "+message+" 1 "+getDateTime());
+                    executeQuery("INSERT INTO mclog (`steam_id`, `player_name`, `chat_msg`, `is_admin`, `time`, `player_ip`) VALUES (@0, @1, @2, @3, @4, @5);",
+                                 pid, pname, pip, message,"1",getDateTime());
+                }
+                else {
+                    // Player
+                    executeQuery("INSERT INTO server_log_chat (player_id, player_name, player_ip, chat_message, admin, time) VALUES (@0, @1, @2, @3, @4, @5)",
+                                 pid, pname, pip, message,"0",getDateTime());
+                }               
         }
-        bool hasPermission(BasePlayer player, string permissionName)
-        {
-            if (player.net.connection.authLevel > 1) return true;
-                return permission.UserHasPermission(player.userID.ToString(), permissionName);
-        }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////// CONSOLE COMMANDS //////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         [ConsoleCommand("mclog.empty")]
-        private void EmptyTableCommand(ConsoleSystem.Arg arg)
-        {
-            MySqlConnect();
-            var sql = Core.Database.Sql.Builder.Append(@EmptyTable);
-            _mySql.ExecuteNonQuery(sql, _mySqlConnection);
+        private void EmptyTableCommand(ConsoleSystem.Arg arg) {
+            executeQuery("TRUNCATE mclog");
             PrintWarning("Empty table successful!");
         }
 
         [ConsoleCommand("mclog.drop")]
-        private void DropTableCommand(ConsoleSystem.Arg arg)
-        {
-            MySqlConnect();
-            var sql = Core.Database.Sql.Builder.Append(@DropTable);
-            _mySql.ExecuteNonQuery(sql, _mySqlConnection);
+        private void DropTableCommand(ConsoleSystem.Arg arg) {
+            executeQuery("DROP mclog");
             PrintWarning("Drop table successful! Please reload the Plugin!");
         }
     }
