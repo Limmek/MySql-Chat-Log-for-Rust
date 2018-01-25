@@ -13,7 +13,6 @@ namespace Oxide.Plugins
     {
         readonly Core.MySql.Libraries.MySql _mySql = new Core.MySql.Libraries.MySql();
         private Connection _mySqlConnection = null;
-        //private readonly Ext.MySql.Libraries.MySql _mySql = Interface.GetMod().GetLibrary<Ext.MySql.Libraries.MySql>();     
         private const string CreateTable = "CREATE TABLE IF NOT EXISTS mclog (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, time TIMESTAMP NULL DEFAULT NULL, steam_id BIGINT(255), player_name VARCHAR(255), chat_message TEXT DEFAULT NULL, is_admin INT(2) default '0', player_ip VARCHAR(255));";
         private Dictionary<string, object> dbConnect = null;
         protected override void LoadDefaultConfig() { }

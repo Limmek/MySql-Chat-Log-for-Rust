@@ -26,16 +26,13 @@ After Drop Table plugin must be reloaded for a new table to be created!
 
 
 ## Table structure
-| ID |     time    |      steam_id     | player_name | chat_msg | is_admin | player_ip |
-|----|-------------|-------------------|-------------|----------|----------|-----------|
-| 1  | y-m-d h.m.s | 76561198047099745 |    Limmek   | Hello :) |     1    | 127.0.0.1 |
+| ID |     time    |      steam_id     | player_name | chat_message | is_admin | player_ip |
+|----|-------------|-------------------|-------------|--------------|----------|-----------|
+| 1  | y-m-d h.m.s | 76561198047099745 |    Limmek   |   Hello :)   |     1    | 127.0.0.1 |
 
 
 ##Web Template.
 ![IMAGE ALT TEXT HERE](https://raw.githubusercontent.com/Limmek/MySql-Chat-Log-for-Rust/master/template_image.jpg)
-
-Live demo (http://rust.swedon.nu/chat)
-
 
 ###TO-DO List:
 ..
