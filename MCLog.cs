@@ -14,7 +14,7 @@ namespace Oxide.Plugins
         readonly Core.MySql.Libraries.MySql _mySql = new Core.MySql.Libraries.MySql();
         private Connection _mySqlConnection = null;
         //private readonly Ext.MySql.Libraries.MySql _mySql = Interface.GetMod().GetLibrary<Ext.MySql.Libraries.MySql>();     
-        private const string CreateTable = "CREATE TABLE IF NOT EXISTS mclog (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, time TIMESTAMP NULL DEFAULT NULL, steam_id BIGINT(255), player_name VARCHAR(255), chat_msg TEXT DEFAULT NULL, is_admin INT(2) default '0', player_ip VARCHAR(255));";
+        private const string CreateTable = "CREATE TABLE IF NOT EXISTS mclog (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, time TIMESTAMP NULL DEFAULT NULL, steam_id BIGINT(255), player_name VARCHAR(255), chat_message TEXT DEFAULT NULL, is_admin INT(2) default '0', player_ip VARCHAR(255));";
         private Dictionary<string, object> dbConnect = null;
         protected override void LoadDefaultConfig() { }
         
@@ -113,14 +113,13 @@ namespace Oxide.Plugins
                 string message = arg.GetString(0);
                 if (player.IsAdmin) {
                     // Admin
-                    //PrintWarning(pid+" "+pname+" "+pip+" "+message+" 1 "+getDateTime());
-                    executeQuery("INSERT INTO mclog (`steam_id`, `player_name`, `chat_msg`, `is_admin`, `time`, `player_ip`) VALUES (@0, @1, @2, @3, @4, @5);",
-                                 pid, pname, pip, message,"1",getDateTime());
+                    executeQuery("INSERT INTO mclog (`steam_id`, `player_name`, `chat_message`, `is_admin`, `time`, `player_ip`) VALUES (@0, @1, @2, @3, @4, @5);",
+                                 pid, pname, message,"1",getDateTime(), pip);
                 }
                 else {
                     // Player
-                    executeQuery("INSERT INTO server_log_chat (player_id, player_name, player_ip, chat_message, admin, time) VALUES (@0, @1, @2, @3, @4, @5)",
-                                 pid, pname, pip, message,"0",getDateTime());
+                    executeQuery("INSERT INTO mclog (`steam_id`, `player_name`, `chat_message`, `is_admin`, `time`, `player_ip`) VALUES (@0, @1, @2, @3, @4, @5)",
+                                 pid, pname, message,"0",getDateTime(), pip);
                 }               
         }
 
